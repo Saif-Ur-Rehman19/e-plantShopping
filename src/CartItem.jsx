@@ -6,13 +6,12 @@ import "./CartItem.css";
 const CartItem = ({ onContinueShopping }) => {
   const cart = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
-  console.log(cart)
-
-  // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
-    return cart.reduce((total, item) => total + item.quantity * item.cost, 0);
+    return cart.reduce((total, item) => {
+      const numericCost = parseFloat(item.cost.replace('$', ''));
+      return total + item.quantity * numericCost;
+    }, 0);
   };
-
   const handleContinueShopping = (e) => {
     onContinueShopping();
   };
@@ -46,13 +45,13 @@ const CartItem = ({ onContinueShopping }) => {
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
-    return (item.quantity * item.cost).toFixed(2);
+    return (item.quantity *  parseFloat(item.cost.replace('$', '')));
   };
 
   return (
     <div className="cart-container">
       <h2 style={{ color: "black" }}>
-        Total Cart Amount: ${calculateTotalAmount().toFixed(2)}
+        Total Cart Amount: ${calculateTotalAmount()}
       </h2>
       <div>
         {cart.map((item) => (
